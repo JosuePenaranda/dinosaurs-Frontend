@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────── */
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+/* ── Banner ─────────────────────────────────────────────────── */
+.global-banner {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+}
+
+.banner-image-card {
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 260px;
+}
+
+.banner-image-card img {
+  object-fit: cover;
+  height: 260px;
+  width: 100%;
+}
+
+/* ── Feature cards ──────────────────────────────────────────── */
+.section-card-image {
+  height: 160px;
+  object-fit: cover;
+}
+
+.feature-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+/* ── Detail image ───────────────────────────────────────────── */
+.detail-image-shell {
+  display: flex;
+  justify-content: center;
+}
+
+.detail-image-frame {
+  max-width: 220px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.detail-main-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Rich-text (Quill output) ───────────────────────────────── */
+.detail-html h2,
+.detail-html h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.detail-html p {
+  margin-bottom: 0.6rem;
+  line-height: 1.65;
+}
+
+.detail-html ul,
+.detail-html ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.detail-html blockquote {
+  border-left: 3px solid #ffc107;
+  padding-left: 0.75rem;
+  color: #6c757d;
+  font-style: italic;
+}
