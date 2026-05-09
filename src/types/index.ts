@@ -15,6 +15,7 @@ export interface Dinosaurio {
   nombre: string;
   tipo: string;
   epoca: string;
+  categoria?: string;
   imagen?: string;
   habitat?: string;
   alimentacion?: string;
@@ -42,7 +43,13 @@ export interface Contribucion {
 export interface ContribucionRequest {
   tipo: string;
   epoca: string;
+  categoria: string;
   titulo: string;
+  habitat: string;
+  alimentacion: string;
+  tamanio: string;
+  curiosidades: string;
+  imagen: string;
   contenidoHtml: string;
 }
 

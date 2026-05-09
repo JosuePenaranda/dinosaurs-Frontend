@@ -40,11 +40,12 @@ export const api = {
         solicitar<string>('/auth/register', { method: 'POST', body: JSON.stringify(cuerpo) }),
 
     // Dinosaurios
-    getDinosaurios: (nombre?: string, tipo?: string, epoca?: string) => {
+    getDinosaurios: (nombre?: string, tipo?: string, epoca?: string, categoria?: string) => {
         const params = new URLSearchParams();
-        if (nombre) params.append('nombre', nombre);
-        if (tipo)   params.append('tipo', tipo);
-        if (epoca)  params.append('epoca', epoca);
+        if (nombre)    params.append('nombre', nombre);
+        if (tipo)      params.append('tipo', tipo);
+        if (epoca)     params.append('epoca', epoca);
+        if (categoria) params.append('categoria', categoria);
         const query = params.toString();
         return solicitar<Dinosaurio[]>(`/dinosaurios${query ? `?${query}` : ''}`);
     },
@@ -65,6 +66,20 @@ export const api = {
     // Contribuciones
     crearContribucion: (cuerpo: ContribucionRequest) =>
         solicitar<string>('/contribuciones', { method: 'POST', body: JSON.stringify(cuerpo) }),
+
+    subirImagenContribucion: async (file: File): Promise<string> => {
+        const token = obtenerToken();
+        const form = new FormData();
+        form.append('file', file);
+        const res = await fetch(`${BASE}/contribuciones/imagen`, {
+            method: 'POST',
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            body: form,
+        });
+        const texto = await res.text();
+        if (!res.ok) throw new Error(texto);
+        return texto;
+    },
 
     getMisContribuciones: () =>
         solicitar<Contribucion[]>('/contribuciones/mias'),
