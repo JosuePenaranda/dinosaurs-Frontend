@@ -13,9 +13,10 @@ type Modo = 'login' | 'register';
 
 function LoginPage(props: LoginPageProps) {
     const [modo, setModo] = useState<Modo>('login');
-    const [username, setUsername] = useState(localStorage.getItem('dbp.username') ?? '');
-    const [password, setPassword] = useState(localStorage.getItem('dbp.password') ?? '');
-    const [recordar, setRecordar] = useState(localStorage.getItem('dbp.recordar') === 'true');
+    const [username, setUsername] = useState(localStorage.getItem('dp.username') ?? '');
+    const [correo, setCorreo] = useState('');
+    const [password, setPassword] = useState('');
+    const [recordar, setRecordar] = useState(localStorage.getItem('dp.recordar') === 'true');
     const [cargando, setCargando] = useState(false);
 
     async function handleLogin(e: React.FormEvent) {
@@ -25,13 +26,11 @@ function LoginPage(props: LoginPageProps) {
             const sesion = await api.login({ username, password });
 
             if (recordar) {
-                localStorage.setItem('dbp.recordar', 'true');
-                localStorage.setItem('dbp.username', username);
-                localStorage.setItem('dbp.password', password);
+                localStorage.setItem('dp.recordar', 'true');
+                localStorage.setItem('dp.username', username);
             } else {
-                localStorage.removeItem('dbp.recordar');
-                localStorage.removeItem('dbp.username');
-                localStorage.removeItem('dbp.password');
+                localStorage.removeItem('dp.recordar');
+                localStorage.removeItem('dp.username');
             }
 
             guardarSesion(sesion);
@@ -49,10 +48,11 @@ function LoginPage(props: LoginPageProps) {
         e.preventDefault();
         setCargando(true);
         try {
-            const respuesta = await api.register({ username, password });
+            const respuesta = await api.register({ username, correo, password });
             props.onMensaje({ tipo: 'success', texto: typeof respuesta === 'string' ? respuesta : 'Usuario registrado.' });
             setModo('login');
             setUsername('');
+            setCorreo('');
             setPassword('');
         } catch (e: unknown) {
             props.onMensaje({ tipo: 'danger', texto: e instanceof Error ? e.message : 'Error desconocido' });
@@ -88,6 +88,21 @@ function LoginPage(props: LoginPageProps) {
                                         required
                                     />
                                 </div>
+
+
+
+                                {modo === 'register' && (
+                                    <div className="col-12">
+                                        <label className="form-label">Correo electrónico</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            value={correo}
+                                            onChange={(e) => setCorreo(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="col-12">
                                     <label className="form-label">Contraseña</label>

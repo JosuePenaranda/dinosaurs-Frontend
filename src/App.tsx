@@ -6,13 +6,12 @@ import Banner from './components/Banner';
 import AlertaMensaje from './components/AlertaMensaje';
 import InicioPage from './pages/InicioPage';
 import LoginPage from './pages/LoginPage';
-import PersonajesPage from './pages/PersonajesPage';
-import SagasPage from './pages/SagasPage';
-import RazasPage from './pages/RazasPage';
+import DinosauriosPage from './pages/DinosauriosPage';
+import DetalleDinosaurioPage from './pages/DetalleDinosaurioPage';
+import FavoritosPage from './pages/FavoritosPage';
 import ContribuirPage from './pages/ContribuirPage';
 import MisContribucionesPage from './pages/MisContribucionesPage';
 import AdminPendientesPage from './pages/AdminPendientesPage';
-import CompararPage from './pages/CompararPage';
 import { obtenerSesion, limpiarSesion } from './services/authService';
 import { MensajeGlobal, SesionUsuario } from './types';
 
@@ -45,6 +44,19 @@ function App() {
     }
 
     function renderPagina() {
+        // Ruta dinámica: /dinosaurios/:id
+        const matchDetalle = ruta.match(/^\/dinosaurios\/(\d+)$/);
+        if (matchDetalle) {
+            return (
+                <DetalleDinosaurioPage
+                    id={Number(matchDetalle[1])}
+                    onNavegar={navegar}
+                    onMensaje={setMensaje}
+                    sesion={sesion}
+                />
+            );
+        }
+
         switch (ruta) {
             case '/login':
                 return (
@@ -54,14 +66,22 @@ function App() {
                         onMensaje={setMensaje}
                     />
                 );
-            case '/personajes':
-                return <PersonajesPage />;
-            case '/sagas':
-                return <SagasPage />;
-            case '/razas':
-                return <RazasPage />;
-            case '/comparar':
-                return <CompararPage />;
+            case '/dinosaurios':
+                return (
+                    <DinosauriosPage
+                        onNavegar={navegar}
+                        onMensaje={setMensaje}
+                        sesion={sesion}
+                    />
+                );
+            case '/favoritos':
+                return (
+                    <FavoritosPage
+                        sesion={sesion}
+                        onNavegar={navegar}
+                        onMensaje={setMensaje}
+                    />
+                );
             case '/contribuir':
                 return (
                     <ContribuirPage

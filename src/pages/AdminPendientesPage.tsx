@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Cargando from '../components/Cargando';
 import { api } from '../services/api';
 import { formatFecha } from '../utils/formatters';
@@ -17,7 +17,7 @@ function AdminPendientesPage(props: AdminPendientesPageProps) {
     const [cargando, setCargando] = useState(true);
     const [procesando, setProcesando] = useState(false);
 
-    const cargarPendientes = async () => {
+    const cargarPendientes = useCallback(async () => {
         try {
             setCargando(true);
             const datos = await api.getPendientes();
@@ -28,14 +28,14 @@ function AdminPendientesPage(props: AdminPendientesPageProps) {
         } finally {
             setCargando(false);
         }
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (props.sesion?.rol === 'ADMIN') {
             cargarPendientes();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.sesion]);
+    }, [props.sesion, cargarPendientes]);
 
     if (!props.sesion) {
         return (

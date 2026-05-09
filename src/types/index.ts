@@ -4,34 +4,24 @@ export type Rol = 'ADMIN' | 'USER';
 export interface SesionUsuario {
   id: number;
   username: string;
+  correo: string;
   rol: Rol;
   token: string;
 }
 
 // ── Entidades ────────────────────────────────────────────────────────────────
-export interface Personaje {
+export interface Dinosaurio {
   id: number;
   nombre: string;
-  contenidoHtml: string;
-  imagenUrl?: string;
+  tipo: string;
+  epoca: string;
+  imagen?: string;
+  habitat?: string;
+  alimentacion?: string;
+  tamanio?: string;
+  curiosidades?: string;
+  descripcion?: string;
   publicado: boolean;
-  [key: string]: unknown;
-}
-
-export interface Saga {
-  id: number;
-  nombre: string;
-  contenidoHtml: string;
-  publicado: boolean;
-  [key: string]: unknown;
-}
-
-export interface Raza {
-  id: number;
-  nombre: string;
-  contenidoHtml: string;
-  publicado: boolean;
-  [key: string]: unknown;
 }
 
 // ── Contribuciones ───────────────────────────────────────────────────────────
@@ -40,6 +30,7 @@ export type EstadoContribucion = 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
 export interface Contribucion {
   id: number;
   tipo: string;
+  epoca: string;
   titulo: string;
   contenidoHtml: string;
   estado: EstadoContribucion;
@@ -50,6 +41,7 @@ export interface Contribucion {
 
 export interface ContribucionRequest {
   tipo: string;
+  epoca: string;
   titulo: string;
   contenidoHtml: string;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cargando from '../components/Cargando';
 import { api } from '../services/api';
-import { MensajeGlobal, Personaje, Raza, Saga } from '../types';
+import { Dinosaurio, MensajeGlobal } from '../types';
 
 interface InicioPageProps {
     onNavegar: (ruta: string) => void;
@@ -9,87 +9,52 @@ interface InicioPageProps {
 }
 
 function InicioPage(props: InicioPageProps) {
-    const [personajes, setPersonajes] = useState<Personaje[]>([]);
-    const [sagas, setSagas] = useState<Saga[]>([]);
-    const [razas, setRazas] = useState<Raza[]>([]);
+    const [destacados, setDestacados] = useState<Dinosaurio[]>([]);
     const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
-        const cargar = async () => {
-            try {
-                const [rp, rs, rr] = await Promise.all([
-                    api.getPersonajes(),
-                    api.getSagas(),
-                    api.getRazas(),
-                ]);
-                setPersonajes(rp.slice(0, 4));
-                setSagas(rs.slice(0, 4));
-                setRazas(rr.slice(0, 4));
-            } catch (e: unknown) {
-                props.onMensaje({ tipo: 'danger', texto: e instanceof Error ? e.message : 'Error al cargar datos' });
-            } finally {
-                setCargando(false);
-            }
-        };
-        cargar();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        api.getDinosaurios()
+            .then(data => setDestacados(data.slice(0, 4)))
+            .catch(() => {})
+            .finally(() => setCargando(false));
     }, []);
 
     return (
         <>
-            {/* Cards de secciones */}
+            {/* Accesos rápidos */}
             <section className="container py-5">
+                <h2 className="fw-bold mb-4">Bienvenido a Dino Portal</h2>
                 <div className="row g-4">
-                    <div className="col-lg-4">
-                        <div className="card shadow-sm border-0 h-100 feature-card">
-                            <img src="/images/pages/personajes.png"
-                                 className="card-img-top section-card-image"
-                                 alt="Personajes" />
-                            <div className="card-body">
-                                <h3 className="h5 fw-bold">Personajes</h3>
+                    <div className="col-md-6">
+                        <div className="card shadow-sm border-0 h-100 feature-card"
+                             style={{ cursor: 'pointer' }}
+                             onClick={() => props.onNavegar('/dinosaurios')}>
+                            <div className="card-body d-flex flex-column justify-content-center p-4">
+                                <div className="fs-1 mb-3">🦕</div>
+                                <h4 className="fw-bold">Explorar Dinosaurios</h4>
                                 <p className="text-secondary mb-3">
-                                    Explorá las fichas publicadas con contenido detallado.
+                                    Buscá y filtrá por nombre, tipo y época.
                                 </p>
-                                <button className="btn btn-outline-dark"
-                                        type="button"
-                                        onClick={() => props.onNavegar('/personajes')}>
-                                    Ver personajes
+                                <button className="btn btn-outline-dark align-self-start" type="button"
+                                        onClick={() => props.onNavegar('/dinosaurios')}>
+                                    Ver catálogo
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-4">
-                        <div className="card shadow-sm border-0 h-100 feature-card">
-                            <img src="/images/pages/sagas.jpg"
-                                 className="card-img-top section-card-image"
-                                 alt="Sagas" />
-                            <div className="card-body">
-                                <h3 className="h5 fw-bold">Sagas</h3>
+                    <div className="col-md-6">
+                        <div className="card shadow-sm border-0 h-100 feature-card"
+                             style={{ cursor: 'pointer' }}
+                             onClick={() => props.onNavegar('/favoritos')}>
+                            <div className="card-body d-flex flex-column justify-content-center p-4">
+                                <div className="fs-1 mb-3">★</div>
+                                <h4 className="fw-bold">Mis Favoritos</h4>
                                 <p className="text-secondary mb-3">
-                                    Consultá los grandes arcos narrativos de la serie.
+                                    Accedé rápido a los dinosaurios que marcaste.
                                 </p>
-                                <button className="btn btn-outline-dark"
-                                        type="button"
-                                        onClick={() => props.onNavegar('/sagas')}>
-                                    Ver sagas
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-4">
-                        <div className="card shadow-sm border-0 h-100 feature-card">
-                            <img src="/images/pages/goku.jpg"
-                                 className="card-img-top section-card-image"
-                                 alt="Razas" />
-                            <div className="card-body">
-                                <h3 className="h5 fw-bold">Razas</h3>
-                                <p className="text-secondary mb-3">
-                                    Descubrí el origen y características de cada raza.
-                                </p>
-                                <button className="btn btn-outline-dark"
-                                        type="button"
-                                        onClick={() => props.onNavegar('/razas')}>
-                                    Ver razas
+                                <button className="btn btn-outline-warning align-self-start" type="button"
+                                        onClick={() => props.onNavegar('/favoritos')}>
+                                    Ver favoritos
                                 </button>
                             </div>
                         </div>
@@ -97,55 +62,35 @@ function InicioPage(props: InicioPageProps) {
                 </div>
             </section>
 
-            {/* Resumen de contenido */}
+            {/* Dinosaurios destacados */}
             <section className="container pb-5">
-                <h2 className="fw-bold mb-4">Contenido publicado</h2>
+                <h3 className="fw-bold mb-4">Dinosaurios destacados</h3>
                 {cargando ? (
                     <Cargando />
+                ) : destacados.length === 0 ? (
+                    <div className="alert alert-secondary">No hay dinosaurios disponibles aún.</div>
                 ) : (
                     <div className="row g-4">
-                        <div className="col-lg-4">
-                            <div className="card shadow-sm border-0 h-100">
-                                <div className="card-body">
-                                    <h5 className="fw-bold text-warning text-uppercase mb-3">Personajes</h5>
-                                    <ul className="list-group list-group-flush">
-                                        {personajes.length === 0
-                                            ? <li className="list-group-item px-0 text-secondary">Sin publicados.</li>
-                                            : personajes.map(p => (
-                                                <li key={p.id} className="list-group-item px-0">{p.nombre}</li>
-                                            ))}
-                                    </ul>
+                        {destacados.map(dino => (
+                            <div className="col-sm-6 col-lg-3" key={dino.id}>
+                                <div className="card h-100 shadow-sm border-0 feature-card"
+                                     style={{ cursor: 'pointer' }}
+                                     onClick={() => props.onNavegar(`/dinosaurios/${dino.id}`)}>
+                                    {dino.imagen && (
+                                        <img src={dino.imagen} alt={dino.nombre}
+                                             className="card-img-top section-card-image"
+                                             onError={e => (e.currentTarget.style.display = 'none')} />
+                                    )}
+                                    <div className="card-body">
+                                        <h5 className="card-title">{dino.nombre}</h5>
+                                        <div className="d-flex gap-2">
+                                            <span className="badge text-bg-warning">{dino.tipo}</span>
+                                            <span className="badge text-bg-secondary">{dino.epoca}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-4">
-                            <div className="card shadow-sm border-0 h-100">
-                                <div className="card-body">
-                                    <h5 className="fw-bold text-warning text-uppercase mb-3">Sagas</h5>
-                                    <ul className="list-group list-group-flush">
-                                        {sagas.length === 0
-                                            ? <li className="list-group-item px-0 text-secondary">Sin publicadas.</li>
-                                            : sagas.map(s => (
-                                                <li key={s.id} className="list-group-item px-0">{s.nombre}</li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4">
-                            <div className="card shadow-sm border-0 h-100">
-                                <div className="card-body">
-                                    <h5 className="fw-bold text-warning text-uppercase mb-3">Razas</h5>
-                                    <ul className="list-group list-group-flush">
-                                        {razas.length === 0
-                                            ? <li className="list-group-item px-0 text-secondary">Sin publicadas.</li>
-                                            : razas.map(r => (
-                                                <li key={r.id} className="list-group-item px-0">{r.nombre}</li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 )}
             </section>

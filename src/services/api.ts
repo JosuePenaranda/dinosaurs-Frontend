@@ -1,9 +1,8 @@
 import { obtenerToken } from './authService';
-import { SesionUsuario, Personaje, Saga, Raza, Contribucion, ContribucionRequest } from '../types';
+import { SesionUsuario, Dinosaurio, Contribucion, ContribucionRequest } from '../types';
 
-const BASE = 'http://localhost:8080/api';
+const BASE = process.env.REACT_APP_API_URL ?? 'http://localhost:8080/api';
 
-// Función genérica: agrega Authorization: Bearer <token> si hay sesión activa
 async function solicitar<T>(ruta: string, opciones: RequestInit = {}): Promise<T> {
     const token = obtenerToken();
 
@@ -20,12 +19,12 @@ async function solicitar<T>(ruta: string, opciones: RequestInit = {}): Promise<T
 
     const texto = await respuesta.text();
     let datos: unknown = null;
-    try { datos = texto ? JSON.parse(texto) : null; } catch { datos = texto; }
+    try { datos = texto ? JSON.parse(texto) : null; } catch { datos = texto || null; }
 
     if (!respuesta.ok) {
-        const msg = typeof datos === 'string'
-            ? datos
-            : (datos as any)?.message ?? 'Error en la solicitud';
+        const msg = typeof datos === 'object' && datos !== null && 'message' in datos
+            ? (datos as { message: string }).message
+            : 'Error en la solicitud';
         throw new Error(msg);
     }
 
@@ -37,20 +36,33 @@ export const api = {
     login: (cuerpo: { username: string; password: string }) =>
         solicitar<SesionUsuario>('/auth/login', { method: 'POST', body: JSON.stringify(cuerpo) }),
 
-    register: (cuerpo: { username: string; password: string }) =>
+    register: (cuerpo: { username: string; correo: string; password: string }) =>
         solicitar<string>('/auth/register', { method: 'POST', body: JSON.stringify(cuerpo) }),
 
-    // Catálogos públicos
-    getPersonajes: (nombre?: string) =>
-        solicitar<Personaje[]>(`/personajes${nombre ? `?nombre=${encodeURIComponent(nombre)}` : ''}`),
+    // Dinosaurios
+    getDinosaurios: (nombre?: string, tipo?: string, epoca?: string) => {
+        const params = new URLSearchParams();
+        if (nombre) params.append('nombre', nombre);
+        if (tipo)   params.append('tipo', tipo);
+        if (epoca)  params.append('epoca', epoca);
+        const query = params.toString();
+        return solicitar<Dinosaurio[]>(`/dinosaurios${query ? `?${query}` : ''}`);
+    },
 
-    getSagas: (nombre?: string) =>
-        solicitar<Saga[]>(`/sagas${nombre ? `?nombre=${encodeURIComponent(nombre)}` : ''}`),
+    getDinosaurio: (id: number) =>
+        solicitar<Dinosaurio>(`/dinosaurios/${id}`),
 
-    getRazas: (nombre?: string) =>
-        solicitar<Raza[]>(`/razas${nombre ? `?nombre=${encodeURIComponent(nombre)}` : ''}`),
+    // Favoritos
+    getFavoritos: () =>
+        solicitar<{ id: number; dinosaurio: Dinosaurio }[]>('/favoritos'),
 
-    // Contribuciones de usuario
+    agregarFavorito: (dinosaurioId: number) =>
+        solicitar<string>(`/favoritos/${dinosaurioId}`, { method: 'POST' }),
+
+    eliminarFavorito: (dinosaurioId: number) =>
+        solicitar<string>(`/favoritos/${dinosaurioId}`, { method: 'DELETE' }),
+
+    // Contribuciones
     crearContribucion: (cuerpo: ContribucionRequest) =>
         solicitar<string>('/contribuciones', { method: 'POST', body: JSON.stringify(cuerpo) }),
 

@@ -14,7 +14,8 @@ interface ContribuirPageProps {
 }
 
 function ContribuirPage(props: ContribuirPageProps) {
-    const [tipo, setTipo] = useState('PERSONAJE');
+    const [tipo, setTipo] = useState('CARNIVORO');
+    const [epoca, setEpoca] = useState('JURASICO');
     const [titulo, setTitulo] = useState('');
     const [contenidoHtml, setContenidoHtml] = useState('');
     const [cargando, setCargando] = useState(false);
@@ -40,7 +41,7 @@ function ContribuirPage(props: ContribuirPageProps) {
 
         const quill = new window.Quill(editorRef.current, {
             theme: 'snow',
-            placeholder: 'Describí el personaje, saga o raza...',
+            placeholder: 'Describí el dinosaurio...',
             modules: {
                 toolbar: [
                     [{ header: [2, 3, false] }],
@@ -92,7 +93,7 @@ function ContribuirPage(props: ContribuirPageProps) {
         }
         setCargando(true);
         try {
-            await api.crearContribucion({ tipo, titulo, contenidoHtml });
+            await api.crearContribucion({ tipo, epoca, titulo, contenidoHtml });
             props.onMensaje({ tipo: 'success', texto: 'Contribución enviada para revisión.' });
             props.onNavegar('/mis-contribuciones');
         } catch (e: unknown) {
@@ -119,20 +120,31 @@ function ContribuirPage(props: ContribuirPageProps) {
                                     <select className="form-select"
                                             value={tipo}
                                             onChange={(e) => setTipo(e.target.value)}>
-                                        <option value="PERSONAJE">Personaje</option>
-                                        <option value="SAGA">Saga</option>
-                                        <option value="RAZA">Raza</option>
+                                        <option value="CARNIVORO">Carnívoro</option>
+                                        <option value="HERBIVORO">Herbívoro</option>
+                                        <option value="OMNIVORO">Omnívoro</option>
                                     </select>
                                 </div>
 
-                                <div className="col-md-8">
+                                <div className="col-md-4">
+                                    <label className="form-label">Época</label>
+                                    <select className="form-select"
+                                            value={epoca}
+                                            onChange={(e) => setEpoca(e.target.value)}>
+                                        <option value="JURASICO">Jurásico</option>
+                                        <option value="CRETACICO">Cretácico</option>
+                                        <option value="TRIASICO">Triásico</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-md-4">
                                     <label className="form-label">Título</label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         value={titulo}
                                         onChange={(e) => setTitulo(e.target.value)}
-                                        placeholder="Ej: Broly, Saga del Torneo del Poder..."
+                                        placeholder="Ej: Tyrannosaurus Rex, Velociraptor..."
                                         required
                                     />
                                 </div>
