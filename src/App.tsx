@@ -111,6 +111,7 @@ function App() {
                     <InicioPage
                         onNavegar={navegar}
                         onMensaje={setMensaje}
+                        sesion={sesion}
                     />
                 );
         }

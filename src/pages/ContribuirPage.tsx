@@ -29,6 +29,7 @@ function ContribuirPage(props: ContribuirPageProps) {
 
     const editorRef = useRef<HTMLDivElement>(null);
     const quillRef = useRef<any>(null);
+    const inputImagenRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const check = setInterval(() => {
@@ -96,7 +97,19 @@ function ContribuirPage(props: ContribuirPageProps) {
                 imagen: imagenRuta, contenidoHtml,
             });
             props.onMensaje({ tipo: 'success', texto: 'Contribución enviada para revisión.' });
-            props.onNavegar('/mis-contribuciones');
+            setTitulo('');
+            setHabitat('');
+            setAlimentacion('');
+            setTamanio('');
+            setCuriosidades('');
+            setImagenFile(null);
+            setImagenPreview(null);
+            if (inputImagenRef.current) inputImagenRef.current.value = '';
+            setTipo('CARNIVORO');
+            setEpoca('JURASICO');
+            setCategoria('TERRESTRE');
+            setContenidoHtml('');
+            if (quillRef.current) quillRef.current.setText('');
         } catch (e: unknown) {
             props.onMensaje({ tipo: 'danger', texto: e instanceof Error ? e.message : 'Error desconocido' });
         } finally {
@@ -169,7 +182,7 @@ function ContribuirPage(props: ContribuirPageProps) {
                         <div className="col-md-4">
                             <label className="form-label">Imagen</label>
                             <input type="file" className="form-control" accept="image/*"
-                                   onChange={handleImagenChange} />
+                                   onChange={handleImagenChange} ref={inputImagenRef} />
                             {imagenPreview && (
                                 <img src={imagenPreview} alt="preview"
                                      className="mt-2 rounded" style={{ maxHeight: 80, objectFit: 'cover' }} />

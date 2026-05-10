@@ -6,6 +6,7 @@ import { Dinosaurio, MensajeGlobal } from '../types';
 interface InicioPageProps {
     onNavegar: (ruta: string) => void;
     onMensaje: (msg: MensajeGlobal) => void;
+    sesion: { rol: string } | null;
 }
 
 function InicioPage(props: InicioPageProps) {
@@ -36,7 +37,7 @@ function InicioPage(props: InicioPageProps) {
                                     Buscá y filtrá por nombre, tipo y época.
                                 </p>
                                 <button className="btn btn-outline-dark align-self-start" type="button"
-                                        onClick={() => props.onNavegar('/dinosaurios')}>
+                                        onClick={e => { e.stopPropagation(); props.onNavegar('/dinosaurios'); }}>
                                     Ver catálogo
                                 </button>
                             </div>

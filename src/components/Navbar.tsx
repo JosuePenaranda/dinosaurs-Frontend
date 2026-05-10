@@ -43,7 +43,7 @@ function Navbar(props: NavbarProps) {
                 <div className="collapse navbar-collapse" id="menuPrincipal">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         {link('/', 'Inicio')}
-                        {link('/dinosaurios', 'Dinosaurios')}
+                        {logueado && link('/dinosaurios', 'Dinosaurios')}
                         {logueado && link('/favoritos', 'Favoritos')}
                         {logueado && link('/contribuir', 'Contribuir')}
                         {logueado && link('/mis-contribuciones', 'Mis contribuciones')}

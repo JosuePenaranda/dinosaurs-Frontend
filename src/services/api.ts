@@ -31,6 +31,7 @@ async function solicitar<T>(ruta: string, opciones: RequestInit = {}): Promise<T
     return datos as T;
 }
 
+
 export const api = {
     // Auth
     login: (cuerpo: { username: string; password: string }) =>
@@ -64,9 +65,6 @@ export const api = {
         solicitar<string>(`/favoritos/${dinosaurioId}`, { method: 'DELETE' }),
 
     // Contribuciones
-    crearContribucion: (cuerpo: ContribucionRequest) =>
-        solicitar<string>('/contribuciones', { method: 'POST', body: JSON.stringify(cuerpo) }),
-
     subirImagenContribucion: async (file: File): Promise<string> => {
         const token = obtenerToken();
         const form = new FormData();
@@ -80,6 +78,9 @@ export const api = {
         if (!res.ok) throw new Error(texto);
         return texto;
     },
+
+    crearContribucion: (cuerpo: ContribucionRequest) =>
+        solicitar<string>('/contribuciones', { method: 'POST', body: JSON.stringify(cuerpo) }),
 
     getMisContribuciones: () =>
         solicitar<Contribucion[]>('/contribuciones/mias'),

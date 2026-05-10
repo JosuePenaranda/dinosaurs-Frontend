@@ -73,9 +73,21 @@ function DinosauriosPage(props: DinosauriosPageProps) {
         }
     }
 
+    if (!props.sesion) {
+        return (
+            <section className="container py-5">
+                <div className="alert alert-warning">Debés iniciar sesión para ver el catálogo de dinosaurios.</div>
+                <button type="button" className="btn btn-warning mt-2"
+                        onClick={() => props.onNavegar('/login')}>
+                    Ir al login
+                </button>
+            </section>
+        );
+    }
+
+
     return (
         <section className="container py-5">
-            {/* Filtros */}
             <div className="card shadow-sm border-0 mb-4">
                 <div className="card-body">
                     <div className="row g-3">
@@ -117,7 +129,6 @@ function DinosauriosPage(props: DinosauriosPageProps) {
                 </div>
             </div>
 
-            {/* Resultados */}
             {cargando ? (
                 <Cargando />
             ) : items.length === 0 ? (

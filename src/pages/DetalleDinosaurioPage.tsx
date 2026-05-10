@@ -36,7 +36,7 @@ function DetalleDinosaurioPage(props: DetalleDinosaurioPageProps) {
 
     async function toggleFavorito() {
         if (!props.sesion) {
-            props.onMensaje({ tipo: 'danger', texto: 'Debés iniciar sesión para guardar favoritos.' });
+            props.onNavegar('/favoritos');
             return;
         }
         try {
@@ -140,7 +140,7 @@ function DetalleDinosaurioPage(props: DetalleDinosaurioPageProps) {
                     {dino.descripcion && (
                         <div className="mb-4">
                             <h5 className="fw-bold">Descripción</h5>
-                            <p className="text-secondary">{dino.descripcion}</p>
+                            <div className="text-secondary" dangerouslySetInnerHTML={{ __html: dino.descripcion }} />
                         </div>
                     )}
 
