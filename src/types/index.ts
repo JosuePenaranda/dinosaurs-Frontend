@@ -33,7 +33,7 @@ export interface Contribucion {
   tipo: string;
   epoca: string;
   titulo: string;
-  contenidoHtml: string;
+  contenido: string;
   estado: EstadoContribucion;
   observacionAdmin?: string;
   fechaCreacion: string;
@@ -50,7 +50,7 @@ export interface ContribucionRequest {
   tamanio: string;
   curiosidades: string;
   imagen: string;
-  contenidoHtml: string;
+  contenido: string;
 }
 
 // ── Mensajes globales ────────────────────────────────────────────────────────

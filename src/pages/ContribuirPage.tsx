@@ -94,7 +94,7 @@ function ContribuirPage(props: ContribuirPageProps) {
             await api.crearContribucion({
                 tipo, epoca, categoria, titulo,
                 habitat, alimentacion, tamanio, curiosidades,
-                imagen: imagenRuta, contenidoHtml,
+                imagen: imagenRuta, contenido: contenidoHtml,
             });
             props.onMensaje({ tipo: 'success', texto: 'Contribución enviada para revisión.' });
             setTitulo('');

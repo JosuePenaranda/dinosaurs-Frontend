@@ -83,7 +83,7 @@ function MisContribucionesPage(props: MisContribucionesPageProps) {
                                         {item.observacionAdmin ?? 'Sin observaciones.'}
                                     </div>
                                     <div className="detail-html border-top pt-3"
-                                         dangerouslySetInnerHTML={{ __html: item.contenidoHtml ?? '' }} />
+                                         dangerouslySetInnerHTML={{ __html: item.contenido ?? '' }} />
                                 </div>
                             </div>
                         </div>

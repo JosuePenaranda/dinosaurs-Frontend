@@ -131,7 +131,7 @@ function AdminPendientesPage(props: AdminPendientesPageProps) {
                                         </div>
 
                                         <div className="detail-html border rounded p-3 bg-light mb-3"
-                                             dangerouslySetInnerHTML={{ __html: seleccionado.contenidoHtml ?? '' }} />
+                                             dangerouslySetInnerHTML={{ __html: seleccionado.contenido ?? '' }} />
 
                                         <div className="mb-3">
                                             <label className="form-label">Observación del administrador</label>
