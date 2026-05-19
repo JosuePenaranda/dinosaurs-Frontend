@@ -24,6 +24,8 @@ async function solicitar<T>(ruta: string, opciones: RequestInit = {}): Promise<T
     if (!respuesta.ok) {
         const msg = typeof datos === 'object' && datos !== null && 'message' in datos
             ? (datos as { message: string }).message
+            : typeof datos === 'string' && datos
+            ? datos
             : 'Error en la solicitud';
         throw new Error(msg);
     }

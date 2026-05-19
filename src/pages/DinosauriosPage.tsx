@@ -164,9 +164,9 @@ function DinosauriosPage(props: DinosauriosPageProps) {
                                     </div>
                                     {dino.descripcion && (
                                         <p className="card-text text-secondary small flex-grow-1">
-                                            {dino.descripcion.length > 100
-                                                ? dino.descripcion.substring(0, 100) + '...'
-                                                : dino.descripcion}
+                                            {dino.descripcion.replace(/<[^>]*>/g, '').length > 100
+                                                ? dino.descripcion.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
+                                                : dino.descripcion.replace(/<[^>]*>/g, '')}
                                         </p>
                                     )}
                                     <button type="button"

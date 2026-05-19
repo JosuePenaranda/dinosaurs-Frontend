@@ -18,6 +18,8 @@ function LoginPage(props: LoginPageProps) {
     const [password, setPassword] = useState('');
     const [recordar, setRecordar] = useState(localStorage.getItem('dp.recordar') === 'true');
     const [cargando, setCargando] = useState(false);
+    const [error, setError] = useState('');
+    const [exito, setExito] = useState('');
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -37,8 +39,8 @@ function LoginPage(props: LoginPageProps) {
             props.onSesion(sesion);
             props.onMensaje({ tipo: 'success', texto: `Bienvenido, ${sesion.username}.` });
             props.onNavegar('/');
-        } catch (e: unknown) {
-            props.onMensaje({ tipo: 'danger', texto: e instanceof Error ? e.message : 'Error desconocido' });
+        } catch {
+            setError('Usuario o contraseña incorrectos.');
         } finally {
             setCargando(false);
         }
@@ -48,14 +50,15 @@ function LoginPage(props: LoginPageProps) {
         e.preventDefault();
         setCargando(true);
         try {
-            const respuesta = await api.register({ username, correo, password });
-            props.onMensaje({ tipo: 'success', texto: typeof respuesta === 'string' ? respuesta : 'Usuario registrado.' });
-            setModo('login');
+            await api.register({ username, correo, password });
+            setExito(`Usuario ${username} creado correctamente.`);
+            setError('');
             setUsername('');
             setCorreo('');
             setPassword('');
         } catch (e: unknown) {
-            props.onMensaje({ tipo: 'danger', texto: e instanceof Error ? e.message : 'Error desconocido' });
+            setError(e instanceof Error ? e.message : 'Error al registrar');
+            setExito('');
         } finally {
             setCargando(false);
         }
@@ -76,6 +79,17 @@ function LoginPage(props: LoginPageProps) {
                                     : 'Completá el formulario para registrarte.'}
                             </p>
 
+                            {exito && (
+                                <div className="alert alert-success py-2 px-3 mb-3" role="alert">
+                                    {exito}
+                                </div>
+                            )}
+                            {error && (
+                                <div className="alert alert-danger py-2 px-3 mb-3" role="alert">
+                                    {error}
+                                </div>
+                            )}
+
                             <form onSubmit={modo === 'login' ? handleLogin : handleRegister}
                                   className="row g-3">
                                 <div className="col-12">
@@ -84,7 +98,7 @@ function LoginPage(props: LoginPageProps) {
                                         type="text"
                                         className="form-control"
                                         value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        onChange={(e) => { setUsername(e.target.value); setError(''); }}
                                         required
                                     />
                                 </div>
@@ -110,7 +124,7 @@ function LoginPage(props: LoginPageProps) {
                                         type="password"
                                         className="form-control"
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => { setPassword(e.target.value); setError(''); }}
                                         required
                                     />
                                 </div>
@@ -146,7 +160,7 @@ function LoginPage(props: LoginPageProps) {
                             <button
                                 type="button"
                                 className="btn btn-link p-0 text-decoration-none"
-                                onClick={() => setModo(modo === 'login' ? 'register' : 'login')}>
+                                onClick={() => { setModo(modo === 'login' ? 'register' : 'login'); setError(''); setExito(''); }}>
                                 {modo === 'login'
                                     ? '¿No tenés cuenta? Registrate aquí.'
                                     : '¿Ya tenés cuenta? Iniciá sesión.'}
