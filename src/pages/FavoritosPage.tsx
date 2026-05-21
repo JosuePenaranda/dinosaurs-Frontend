@@ -56,49 +56,66 @@ function FavoritosPage(props: FavoritosPageProps) {
 
     return (
         <section className="container py-5">
-            <h2 className="fw-bold mb-1">Mis favoritos</h2>
-            <p className="text-secondary mb-4">Los dinosaurios que marcaste como favoritos.</p>
+            <div className="d-flex align-items-center gap-2 mb-4">
+                <div style={{ width: 4, height: 28, backgroundColor: '#2e6da4', borderRadius: 2 }} />
+                <div>
+                    <h2 className="fw-bold mb-0">Mis favoritos</h2>
+                    <p className="text-secondary small mb-0">Los dinosaurios que marcaste como favoritos.</p>
+                </div>
+            </div>
 
             {cargando ? (
                 <Cargando />
             ) : items.length === 0 ? (
-                <div className="alert alert-secondary">
-                    No tenés favoritos todavía.{' '}
-                    <button type="button" className="btn btn-link p-0"
-                            onClick={() => props.onNavegar('/dinosaurios')}>
-                        Explorá el catálogo.
-                    </button>
+                <div className="card border-0 shadow-sm">
+                    <div className="card-body text-center py-5">
+                        <div className="fs-1 mb-3">☆</div>
+                        <h5 className="fw-bold">No tenés favoritos todavía</h5>
+                        <p className="text-secondary mb-3">Explorá el catálogo y marcá los que más te gusten.</p>
+                        <button type="button" className="btn fw-semibold"
+                                style={{ backgroundColor: '#2e6da4', color: 'white' }}
+                                onClick={() => props.onNavegar('/dinosaurios')}>
+                            Explorar catálogo
+                        </button>
+                    </div>
                 </div>
             ) : (
-                <div className="row g-4">
+                <div className="d-flex flex-column gap-3">
                     {items.map(dino => (
-                        <div className="col-sm-6 col-lg-4 col-xl-3" key={dino.id}>
-                            <div className="card h-100 shadow-sm border-0 feature-card"
-                                 style={{ cursor: 'pointer' }}
-                                 onClick={() => props.onNavegar(`/dinosaurios/${dino.id}`)}>
+                        <div className="card border-0 shadow-sm feature-card" key={dino.id}
+                             style={{ cursor: 'pointer' }}
+                             onClick={() => props.onNavegar(`/dinosaurios/${dino.id}`)}>
+                            <div className="row g-0">
                                 {dino.imagen && (
-                                    <img src={dino.imagen} alt={dino.nombre}
-                                         className="card-img-top section-card-image"
-                                         onError={e => (e.currentTarget.style.display = 'none')} />
-                                )}
-                                <div className="card-body d-flex flex-column">
-                                    <h5 className="card-title">{dino.nombre}</h5>
-                                    <div className="d-flex gap-2 mb-3">
-                                        <span className="badge text-bg-warning">{dino.tipo}</span>
-                                        <span className="badge text-bg-secondary">{dino.epoca}</span>
+                                    <div className="col-3 col-md-2">
+                                        <img src={dino.imagen} alt={dino.nombre}
+                                             style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: 100, borderRadius: '12px 0 0 12px' }}
+                                             onError={e => (e.currentTarget.style.display = 'none')} />
                                     </div>
-                                    <div className="d-flex gap-2 mt-auto">
-                                        <button type="button"
-                                                className="btn btn-outline-dark btn-sm flex-grow-1"
-                                                onClick={e => { e.stopPropagation(); props.onNavegar(`/dinosaurios/${dino.id}`); }}>
-                                            Ver detalle
-                                        </button>
-                                        <button type="button"
-                                                className="btn btn-outline-danger btn-sm"
-                                                title="Quitar de favoritos"
-                                                onClick={e => { e.stopPropagation(); eliminar(dino.id); }}>
-                                            ★
-                                        </button>
+                                )}
+                                <div className={dino.imagen ? 'col-9 col-md-10' : 'col-12'}>
+                                    <div className="card-body d-flex justify-content-between align-items-center p-3">
+                                        <div>
+                                            <h6 className="fw-bold mb-1">{dino.nombre}</h6>
+                                            <div className="d-flex gap-1 flex-wrap">
+                                                <span className="badge" style={{ backgroundColor: '#2e6da4' }}>{dino.tipo}</span>
+                                                <span className="badge bg-secondary">{dino.epoca}</span>
+                                            </div>
+                                        </div>
+                                        <div className="d-flex gap-2 ms-3">
+                                            <button type="button"
+                                                    className="btn btn-sm fw-semibold"
+                                                    style={{ backgroundColor: '#0d1b2a', color: 'white' }}
+                                                    onClick={e => { e.stopPropagation(); props.onNavegar(`/dinosaurios/${dino.id}`); }}>
+                                                Ver
+                                            </button>
+                                            <button type="button"
+                                                    className="btn btn-sm btn-outline-danger"
+                                                    title="Quitar de favoritos"
+                                                    onClick={e => { e.stopPropagation(); eliminar(dino.id); }}>
+                                                ✕
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

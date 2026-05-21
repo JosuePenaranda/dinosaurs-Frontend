@@ -24,7 +24,7 @@ function Navbar(props: NavbarProps) {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <nav className="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top" style={{ backgroundColor: '#0d1b2a' }}>
             <div className="container">
                 <a className="navbar-brand fw-bold d-flex align-items-center gap-2"
                    href="#/"

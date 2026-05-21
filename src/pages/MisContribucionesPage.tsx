@@ -44,47 +44,69 @@ function MisContribucionesPage(props: MisContribucionesPageProps) {
         );
     }
 
+    const colorEstado: Record<string, string> = {
+        PENDIENTE: '#f0ad4e',
+        APROBADA: '#2e6da4',
+        RECHAZADA: '#dc3545',
+    };
+
     return (
         <section className="container py-5">
-            <h2 className="fw-bold mb-1">Mis contribuciones</h2>
-            <p className="text-secondary mb-4">
-                Seguimiento de todos los aportes que enviaste al portal.
-            </p>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="d-flex align-items-center gap-2">
+                    <div style={{ width: 4, height: 28, backgroundColor: '#2e6da4', borderRadius: 2 }} />
+                    <div>
+                        <h2 className="fw-bold mb-0">Mis contribuciones</h2>
+                        <p className="text-secondary small mb-0">Seguimiento de todos los aportes que enviaste.</p>
+                    </div>
+                </div>
+                <button type="button" className="btn btn-sm fw-semibold"
+                        style={{ backgroundColor: '#2e6da4', color: 'white' }}
+                        onClick={() => props.onNavegar('/contribuir')}>
+                    + Nueva contribución
+                </button>
+            </div>
 
             {cargando ? (
                 <Cargando />
             ) : items.length === 0 ? (
-                <div className="alert alert-secondary">
-                    No has enviado contribuciones todavía.{' '}
-                    <button type="button" className="btn btn-link p-0"
-                            onClick={() => props.onNavegar('/contribuir')}>
-                        Enviá tu primer aporte.
-                    </button>
+                <div className="card border-0 shadow-sm">
+                    <div className="card-body text-center py-5">
+                        <div className="fs-1 mb-3">📝</div>
+                        <h5 className="fw-bold">Aún no enviaste contribuciones</h5>
+                        <p className="text-secondary mb-3">Compartí tu conocimiento sobre dinosaurios con la comunidad.</p>
+                        <button type="button" className="btn fw-semibold"
+                                style={{ backgroundColor: '#2e6da4', color: 'white' }}
+                                onClick={() => props.onNavegar('/contribuir')}>
+                            Enviar primera contribución
+                        </button>
+                    </div>
                 </div>
             ) : (
-                <div className="row g-3">
+                <div className="d-flex flex-column gap-3">
                     {items.map((item) => (
-                        <div className="col-12" key={item.id}>
-                            <div className="card shadow-sm border-0">
-                                <div className="card-body">
-                                    <div className="d-flex flex-wrap justify-content-between gap-3 mb-2">
-                                        <div>
-                                            <h5 className="mb-1">{item.titulo}</h5>
-                                            <div className="text-secondary small">
-                                                {item.tipo} · {formatFecha(item.fechaCreacion)}
-                                            </div>
+                        <div className="card border-0 shadow-sm" key={item.id}
+                             style={{ borderLeft: `4px solid ${colorEstado[item.estado] ?? '#6c757d'}` }}>
+                            <div className="card-body p-4">
+                                <div className="d-flex flex-wrap justify-content-between gap-2 mb-2">
+                                    <div>
+                                        <h5 className="mb-1 fw-bold">{item.titulo}</h5>
+                                        <div className="text-secondary small">
+                                            {item.tipo} · {formatFecha(item.fechaCreacion)}
                                         </div>
-                                        <span className={`badge text-bg-${badgeEstado(item.estado)} align-self-start`}>
-                                            {formatEstado(item.estado)}
-                                        </span>
                                     </div>
-                                    <div className="small text-secondary mb-3">
-                                        <strong>Observación del admin:</strong>{' '}
-                                        {item.observacionAdmin ?? 'Sin observaciones.'}
-                                    </div>
-                                    <div className="detail-html border-top pt-3"
-                                         dangerouslySetInnerHTML={{ __html: item.contenido ?? '' }} />
+                                    <span className={`badge text-bg-${badgeEstado(item.estado)} align-self-start`}>
+                                        {formatEstado(item.estado)}
+                                    </span>
                                 </div>
+                                {item.observacionAdmin && (
+                                    <div className="small p-2 rounded mb-3"
+                                         style={{ backgroundColor: '#e8f0f7', color: '#0d1b2a' }}>
+                                        <strong>Observación:</strong> {item.observacionAdmin}
+                                    </div>
+                                )}
+                                <div className="detail-html border-top pt-3"
+                                     dangerouslySetInnerHTML={{ __html: item.contenido ?? '' }} />
                             </div>
                         </div>
                     ))}

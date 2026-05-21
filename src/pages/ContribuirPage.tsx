@@ -119,106 +119,126 @@ function ContribuirPage(props: ContribuirPageProps) {
 
     return (
         <section className="container py-5">
-            <div className="card shadow-sm border-0">
-                <div className="card-body p-4 p-lg-5">
-                    <h2 className="fw-bold mb-1">Enviar contribución</h2>
-                    <p className="text-secondary mb-4">Completá el formulario. El administrador revisará el contenido antes de publicarlo.</p>
+            <div className="row g-4">
+                {/* Formulario */}
+                <div className="col-lg-8">
+                    <div className="card border-0 shadow-sm">
+                        <div className="card-body p-4">
+                            <div className="d-flex align-items-center gap-2 mb-4">
+                                <div style={{ width: 4, height: 28, backgroundColor: '#2e6da4', borderRadius: 2 }} />
+                                <h4 className="fw-bold mb-0">Enviar contribución</h4>
+                            </div>
 
-                    <form className="row g-3" onSubmit={handleEnviar}>
-                        {/* Fila 1 */}
-                        <div className="col-md-4">
-                            <label className="form-label">Nombre del dinosaurio</label>
-                            <input type="text" className="form-control" value={titulo}
-                                   onChange={e => setTitulo(e.target.value)}
-                                   placeholder="Ej: Tyrannosaurus Rex..." required />
+                            <form className="row g-3" onSubmit={handleEnviar}>
+                                <div className="col-md-6">
+                                    <label className="form-label small fw-semibold">Nombre del dinosaurio</label>
+                                    <input type="text" className="form-control" value={titulo}
+                                           onChange={e => setTitulo(e.target.value)}
+                                           placeholder="Ej: Tyrannosaurus Rex..." required />
+                                </div>
+                                <div className="col-md-3">
+                                    <label className="form-label small fw-semibold">Tipo</label>
+                                    <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)}>
+                                        <option value="CARNIVORO">Carnívoro</option>
+                                        <option value="HERBIVORO">Herbívoro</option>
+                                        <option value="OMNIVORO">Omnívoro</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-3">
+                                    <label className="form-label small fw-semibold">Época</label>
+                                    <select className="form-select" value={epoca} onChange={e => setEpoca(e.target.value)}>
+                                        <option value="JURASICO">Jurásico</option>
+                                        <option value="CRETACICO">Cretácico</option>
+                                        <option value="TRIASICO">Triásico</option>
+                                        <option value="NEOGENO">Neógeno</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-4">
+                                    <label className="form-label small fw-semibold">Categoría</label>
+                                    <select className="form-select" value={categoria} onChange={e => setCategoria(e.target.value)}>
+                                        <option value="TERRESTRE">Terrestre</option>
+                                        <option value="ACUATICO">Acuático</option>
+                                        <option value="AEREO">Aéreo</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-4">
+                                    <label className="form-label small fw-semibold">Alimentación</label>
+                                    <input type="text" className="form-control" value={alimentacion}
+                                           onChange={e => setAlimentacion(e.target.value)}
+                                           placeholder="Ej: Carne, plantas..." />
+                                </div>
+                                <div className="col-md-4">
+                                    <label className="form-label small fw-semibold">Tamaño</label>
+                                    <input type="text" className="form-control" value={tamanio}
+                                           onChange={e => setTamanio(e.target.value)}
+                                           placeholder="Ej: 12 metros..." />
+                                </div>
+                                <div className="col-12">
+                                    <label className="form-label small fw-semibold">Hábitat</label>
+                                    <input type="text" className="form-control" value={habitat}
+                                           onChange={e => setHabitat(e.target.value)}
+                                           placeholder="Ej: Bosques de Norteamérica..." />
+                                </div>
+                                <div className="col-12">
+                                    <label className="form-label small fw-semibold">Curiosidades</label>
+                                    <textarea className="form-control" rows={2} value={curiosidades}
+                                              onChange={e => setCuriosidades(e.target.value)}
+                                              placeholder="Datos curiosos sobre el dinosaurio..." />
+                                </div>
+                                <div className="col-12">
+                                    <label className="form-label small fw-semibold">Descripción</label>
+                                    <div style={{ border: '1px solid #dee2e6', borderRadius: 6, background: '#fff' }}>
+                                        {quillListo ? (
+                                            <div ref={editorRef} />
+                                        ) : (
+                                            <div className="p-3 text-secondary small">Cargando editor...</div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="col-12 d-flex gap-2 justify-content-end mt-2">
+                                    <button type="button" className="btn btn-outline-secondary"
+                                            onClick={() => props.onNavegar('/')}>
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" className="btn fw-semibold" disabled={cargando}
+                                            style={{ backgroundColor: '#2e6da4', color: 'white' }}>
+                                        {cargando ? 'Enviando...' : 'Enviar contribución'}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Tipo</label>
-                            <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)}>
-                                <option value="CARNIVORO">Carnívoro</option>
-                                <option value="HERBIVORO">Herbívoro</option>
-                                <option value="OMNIVORO">Omnívoro</option>
-                            </select>
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Época</label>
-                            <select className="form-select" value={epoca} onChange={e => setEpoca(e.target.value)}>
-                                <option value="JURASICO">Jurásico</option>
-                                <option value="CRETACICO">Cretácico</option>
-                                <option value="TRIASICO">Triásico</option>
-                                <option value="NEOGENO">Neógeno</option>
-                            </select>
-                        </div>
+                    </div>
+                </div>
 
-                        {/* Fila 2 */}
-                        <div className="col-md-4">
-                            <label className="form-label">Categoría</label>
-                            <select className="form-select" value={categoria} onChange={e => setCategoria(e.target.value)}>
-                                <option value="TERRESTRE">Terrestre</option>
-                                <option value="ACUATICO">Acuático</option>
-                                <option value="AEREO">Aéreo</option>
-                            </select>
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Alimentación</label>
-                            <input type="text" className="form-control" value={alimentacion}
-                                   onChange={e => setAlimentacion(e.target.value)}
-                                   placeholder="Ej: Carne, plantas..." />
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Tamaño</label>
-                            <input type="text" className="form-control" value={tamanio}
-                                   onChange={e => setTamanio(e.target.value)}
-                                   placeholder="Ej: 12 metros de largo..." />
-                        </div>
-
-                        {/* Fila 3 */}
-                        <div className="col-md-8">
-                            <label className="form-label">Hábitat</label>
-                            <input type="text" className="form-control" value={habitat}
-                                   onChange={e => setHabitat(e.target.value)}
-                                   placeholder="Ej: Bosques de Norteamérica..." />
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Imagen</label>
-                            <input type="file" className="form-control" accept="image/*"
+                {/* Panel derecho */}
+                <div className="col-lg-4">
+                    <div className="card border-0 shadow-sm mb-3">
+                        <div className="card-body p-3">
+                            <h6 className="fw-bold mb-3">Imagen del dinosaurio</h6>
+                            <input type="file" className="form-control form-control-sm" accept="image/*"
                                    onChange={handleImagenChange} ref={inputImagenRef} />
-                            {imagenPreview && (
+                            {imagenPreview ? (
                                 <img src={imagenPreview} alt="preview"
-                                     className="mt-2 rounded" style={{ maxHeight: 80, objectFit: 'cover' }} />
+                                     className="mt-3 rounded w-100"
+                                     style={{ maxHeight: 180, objectFit: 'cover' }} />
+                            ) : (
+                                <div className="mt-3 rounded d-flex align-items-center justify-content-center"
+                                     style={{ height: 120, backgroundColor: '#e8f0f7', color: '#6c757d', fontSize: '0.85rem' }}>
+                                    Sin imagen seleccionada
+                                </div>
                             )}
                         </div>
-
-                        {/* Curiosidades */}
-                        <div className="col-12">
-                            <label className="form-label">Curiosidades</label>
-                            <textarea className="form-control" rows={2} value={curiosidades}
-                                      onChange={e => setCuriosidades(e.target.value)}
-                                      placeholder="Datos curiosos sobre el dinosaurio..." />
+                    </div>
+                    <div className="card border-0 shadow-sm" style={{ backgroundColor: '#e8f0f7' }}>
+                        <div className="card-body p-3">
+                            <h6 className="fw-bold mb-2" style={{ color: '#0d1b2a' }}>Recomendaciones</h6>
+                            <ul className="text-secondary small mb-0 ps-3">
+                                <li className="mb-1">Usá un título claro y específico.</li>
+                                <li className="mb-1">Describí con el mayor detalle posible.</li>
+                                <li className="mb-1">El admin revisará tu aporte antes de publicarlo.</li>
+                            </ul>
                         </div>
-
-                        {/* Descripción */}
-                        <div className="col-12">
-                            <label className="form-label">Descripción</label>
-                            <div style={{ maxHeight: 300, overflowY: 'auto', border: '1px solid #dee2e6', borderRadius: 6, background: '#fff' }}>
-                                {quillListo ? (
-                                    <div ref={editorRef} />
-                                ) : (
-                                    <div className="p-3 text-secondary">Cargando editor...</div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="col-12 d-flex gap-2 justify-content-end mt-2">
-                            <button type="button" className="btn btn-outline-secondary"
-                                    onClick={() => props.onNavegar('/')}>
-                                Cancelar
-                            </button>
-                            <button type="submit" className="btn btn-warning fw-semibold" disabled={cargando}>
-                                {cargando ? 'Enviando...' : 'Enviar contribución'}
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </section>
